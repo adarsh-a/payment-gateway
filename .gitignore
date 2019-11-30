@@ -3,7 +3,7 @@
 bin
 bin/debug/
 payment-gateway/bin
-payment-gateway/obj/
+payment-gateway/obj
 obj
 /obj/Debug
 .vs
