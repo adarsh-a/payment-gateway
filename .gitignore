@@ -1,0 +1,15 @@
+/Database/bin
+/Database/obj
+bin
+bin/debug/
+payment-gateway/bin
+payment-gateway/obj/
+obj
+/obj/Debug
+.vs
+
+*.dbmdl
+
+*.jfm
+*.dll
+*.pdb
