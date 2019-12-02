@@ -14,6 +14,8 @@ The payment gateway has access to the following informations:
  - Add logging for all errors found when performing any action
  - Store data in MongoDB
  - Use async calls for API
+ - Add validations for card number
+ - Use Provider pattern for different banks
 
 
 #API Testing

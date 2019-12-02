@@ -29,7 +29,7 @@ namespace Payment.Gateway.Repository
                     CreatedDate=DateTime.Now.AddDays(-10),
                     Identifier = Guid.NewGuid(),
                     MerchantId = new Guid("a731bea3-d82f-4cdb-8405-c91e4a4603f4"),
-                    PayerCardNum = "4550123412342345",
+                    PayerCardNum = "4550123542342345",
                     Status=true
                 },
                  new LogDetails()
@@ -38,7 +38,7 @@ namespace Payment.Gateway.Repository
                     CreatedDate=DateTime.Now.AddDays(-5),
                     Identifier = Guid.NewGuid(),
                     MerchantId = new Guid("a731bea3-d82f-4cdb-8405-c91e4a4603f4"),
-                    PayerCardNum = "4550123812342345",
+                    PayerCardNum = "4550123812002345",
                     Status=true
                 },
                  new LogDetails()
@@ -47,7 +47,7 @@ namespace Payment.Gateway.Repository
                     CreatedDate=DateTime.Now.AddDays(-8),
                     Identifier = Guid.NewGuid(),
                     MerchantId = new Guid("d5ac41ea-32ef-464a-adef-847ecfcd02fd"),
-                    PayerCardNum = "4550123812342345",
+                    PayerCardNum = "4550123772342345",
                     Status=true
                 }
             };
@@ -58,10 +58,22 @@ namespace Payment.Gateway.Repository
         {
             var paymentDetails = new PaymentDetails();
             var list = logEntries.Where(i => i.MerchantId == merchantId).ToList();
+            paymentDetails.Payments = new List<LogDetails>();
 
             if (list.Any())
             {
-                paymentDetails.Payments = list;
+                foreach(var paymentDetail in list) 
+                {
+                    if (paymentDetail.PayerCardNum.Length > 11)
+                    {
+                        var maskedCard = $"{paymentDetail.PayerCardNum.Substring(0, 6)}xxxxxx{paymentDetail.PayerCardNum.Substring(12)}";
+                        paymentDetail.PayerCardNum = maskedCard;
+                    }
+
+                    paymentDetails.Payments.Add(paymentDetail);
+
+
+                }
             }
             else
             {
