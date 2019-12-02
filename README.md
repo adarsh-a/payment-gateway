@@ -1,14 +1,14 @@
-##Payment-gateway
+# Payment-gateway
 Payment Gateway Challenge
 
 Implementation of a simple Payment Gateway using .Net Core 2.2
 
-##Assumptions
+## Assumptions
 The payment gateway has access to the following informations:
  - merchants identifier
  - merchants card number
 
-##Improvements
+## Improvements
  - Make use of private shared key for authentication between Bank and Payment Gateway
  - Use encryption for sensitive data
  - Add logging for all errors found when performing any action
@@ -18,7 +18,7 @@ The payment gateway has access to the following informations:
  - Use Provider pattern for different banks
 
 
-##API Testing
+## API Testing
 1. Get Transactions for a specific merchant.
 ````
 /api/paymentgateway/gettransactiondetails
