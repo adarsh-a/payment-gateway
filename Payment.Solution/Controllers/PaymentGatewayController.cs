@@ -10,13 +10,13 @@ using Payment.Gateway.Domain.Payment;
 using Payment.Solution.Models;
 using Payment.Gateway.Service;
 using Moq;
+using System.Web.Helpers;
 
 namespace Payment.Solution.Controllers
 {
     [Route("api/[controller]")]
-    [Produces("application/json")]
     [ApiController]
-    public class PaymentGatewayController : Controller
+    public class PaymentGatewayController : ControllerBase
     {
         private IPaymentService paymentService { get; set; }
 
@@ -29,8 +29,9 @@ namespace Payment.Solution.Controllers
         }
         //Get api/makepayment
         [HttpPost]
-        [Route("makepayment")]
-        public string MakePayment([FromBody] PaymentTransactionDetails paymentTransactionDetails)
+       // [Route("makepayment")]
+        [Produces("application/json")]
+        public string Post([FromBody] PaymentTransactionDetails paymentTransactionDetails)
         {
             var msg = string.Empty;
             if (merchantsList != null && merchantsList.MerchantsInfoList != null && merchantsList.MerchantsInfoList.Any())
@@ -78,9 +79,10 @@ namespace Payment.Solution.Controllers
         }
 
 
-        [HttpPost]
-        [Route("gettransactiondetails")]
-        public IActionResult GetTransactionDetails([FromBody] string merchantId)
+        [HttpGet("{merchantId}", Name = "Get")]
+        //[Route("gettransactiondetails")]
+        [Produces("application/json")]
+        public PaymentLogResponse Get(string merchantId)
         {
             PaymentLogResponse lresponse = new PaymentLogResponse();
             lresponse.PaymentHistory = new List<Gateway.Domain.Logs.LogDetails>();
@@ -106,14 +108,8 @@ namespace Payment.Solution.Controllers
                 }
             }
 
-            return Json(lresponse);
+            return lresponse;
 
-        }
-
-        [HttpGet]
-        public ActionResult<string> Welcome()
-        {
-            return "Welcome to the Payment Gateway";
         }
     }
 }
