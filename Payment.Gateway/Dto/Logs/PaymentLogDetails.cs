@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Payment.Gateway.Domain.Logs
 {
-    public class LogDetails : PaymentResponse
+    public class PaymentLogDetails : PaymentResponse
     {
         public DateTime CreatedDate { get; set; }
     }

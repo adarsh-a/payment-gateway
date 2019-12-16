@@ -9,6 +9,7 @@ using Payment.Solution.ConfigurationItems;
 using Payment.Gateway.Domain.Payment;
 using Payment.Solution.Models;
 using Payment.Gateway.Service;
+//using Payment.Log.Service;
 using Moq;
 using System.Web.Helpers;
 
@@ -33,41 +34,53 @@ namespace Payment.Solution.Controllers
         [Produces("application/json")]
         public string Post([FromBody] PaymentTransactionDetails paymentTransactionDetails)
         {
+            Serilog.Log.Information("Method Process Payment Started");
+            //logger.InsertLog("Testing", Log.Constants.ErrorSet.Errors.Info);    
             var msg = string.Empty;
             if (merchantsList != null && merchantsList.MerchantsInfoList != null && merchantsList.MerchantsInfoList.Any())
             {
-                if (paymentTransactionDetails.MerchantId != Guid.Empty)
+                var card = paymentService.CheckCard(paymentTransactionDetails);
+                if (card.IsValid)
                 {
-                    var currentMerchant = merchantsList.MerchantsInfoList.FirstOrDefault(i => i.Uid.Equals(paymentTransactionDetails.MerchantId));
-                    if (currentMerchant != null)
+
+                    if (paymentTransactionDetails.MerchantId != Guid.Empty)
                     {
-                        var merchantCard = currentMerchant.CardNumber;
-                        if (!string.IsNullOrEmpty(merchantCard))
+                        var currentMerchant = merchantsList.MerchantsInfoList.FirstOrDefault(i => i.Uid.Equals(paymentTransactionDetails.MerchantId));
+                        if (currentMerchant != null)
                         {
-                            //calling the bank API here
-                            var transactionResponse = paymentService.ProcessTransaction(paymentTransactionDetails, merchantCard);
-                            if(transactionResponse != null && transactionResponse.Identifier!= Guid.Empty) 
+                            var merchantCard = currentMerchant.CardNumber;
+                            if (!string.IsNullOrEmpty(merchantCard))
                             {
-                                if (transactionResponse.Status == false) 
+                                //calling the bank API here
+                                var transactionResponse = paymentService.ProcessTransaction(paymentTransactionDetails, merchantCard);
+                                if (transactionResponse != null && transactionResponse.Identifier != Guid.Empty)
+                                {
+                                    if (transactionResponse.Status == false)
+                                    {
+                                        msg = $"An error occured while processing the transaction. Please try again later";
+
+                                    }
+
+                                    var updateHistoryResponse = paymentService.UpdatePaymentHistory(transactionResponse);
+                                }
+                                else
                                 {
                                     msg = $"An error occured while processing the transaction. Please try again later";
-
                                 }
 
-                                var updateHistoryResponse = paymentService.UpdatePaymentHistory(transactionResponse);
                             }
-                            else 
-                            {
-                                msg = $"An error occured while processing the transaction. Please try again later";
-                            }
+                        }
+                        else
+                        {
+                            msg = $"Merchant with ID {paymentTransactionDetails.MerchantId.ToString()} cannot be found";
 
                         }
                     }
-                    else
-                    {
-                        msg = $"Merchant with ID {paymentTransactionDetails.MerchantId.ToString()} cannot be found";
-
-                    }
+                }
+                else 
+                {
+                    msg = "Card is not valid";
+                
                 }
             }
             else
@@ -85,7 +98,7 @@ namespace Payment.Solution.Controllers
         public PaymentLogResponse Get(string merchantId)
         {
             PaymentLogResponse lresponse = new PaymentLogResponse();
-            lresponse.PaymentHistory = new List<Gateway.Domain.Logs.LogDetails>();
+            lresponse.PaymentHistory = new List<Gateway.Domain.Logs.PaymentLogDetails>();
 
             if (!string.IsNullOrEmpty(merchantId))
             {

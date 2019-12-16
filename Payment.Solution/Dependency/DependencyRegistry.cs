@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Payment.Gateway.Repository;
 using Payment.Gateway.Service;
 using Payment.Solution.ConfigurationItems;
+//using Payment.Log.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace Payment.Solution.Dependency
 
             services.AddSingleton<IPaymentService, PaymentService>();
             services.AddSingleton<IPaymentDetailsRepository, PaymentDetailsRepository>();
+           // services.AddSingleton<ILogger, Logger>();
+
 
 
 

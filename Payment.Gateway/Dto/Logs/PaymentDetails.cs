@@ -9,6 +9,6 @@ namespace Payment.Gateway.Domain.Logs
     {
         public string Message { get; set; }
 
-        public List<LogDetails> Payments { get; set; }
+        public List<PaymentLogDetails> Payments { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace Payment.Solution.Models
 {
     public class PaymentLogResponse : ResponseBase
     {
-        public List<LogDetails> PaymentHistory { get; set; }
+        public List<PaymentLogDetails> PaymentHistory { get; set; }
     }
 }

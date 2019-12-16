@@ -10,7 +10,7 @@ using System;
 namespace Payment.Solution.UnitTest
 {
     [TestClass]
-    public class UnitTest1
+    public class PaymentGatewayControllerTest
     {
         [TestMethod]
         public void TestProcessTransactionPass()
@@ -54,8 +54,8 @@ namespace Payment.Solution.UnitTest
                 }
             };
 
-            PaymentGatewayController paymentGatewayController = new PaymentGatewayController(mock.Object, ml);
-            paymentGatewayController.MakePayment(ptd);
+           // PaymentGatewayController paymentGatewayController = new PaymentGatewayController(mock.Object, ml);
+            //paymentGatewayController.MakePayment(ptd);
 
             mock.Verify(f => f.ProcessTransaction(ptd, merchantCard));
             mock.Verify(f => f.UpdatePaymentHistory(pr));

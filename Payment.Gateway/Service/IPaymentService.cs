@@ -1,4 +1,5 @@
-﻿using Payment.Gateway.Domain.Logs;
+﻿using Payment.Gateway.Domain.CardManagement;
+using Payment.Gateway.Domain.Logs;
 using Payment.Gateway.Domain.Payment;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,9 @@ namespace Payment.Gateway.Service
         PaymentDetails GetPaymentHistory(Guid merchantId);
 
         bool UpdatePaymentHistory(PaymentResponse paymentResponse);
+
+        Card CheckCard(PaymentTransactionDetails paymentTransactionDetails);
+
+        
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Payment.Gateway.Domain.CardManagement;
 using Payment.Gateway.Domain.Logs;
 using Payment.Gateway.Domain.Payment;
 using Payment.Gateway.Repository;
@@ -12,12 +13,15 @@ namespace Payment.Gateway.Service
     public class PaymentService : IPaymentService
     {
         private IPaymentDetailsRepository paymentRepository { get; set; }
+
+
         public PaymentService(IPaymentDetailsRepository paymentRepository)
         {
             this.paymentRepository = paymentRepository;
         }
         public PaymentDetails GetPaymentHistory(Guid merchantId)
         {
+
             try
             {
                 return paymentRepository.GetTransactionDetails(merchantId);
@@ -25,6 +29,7 @@ namespace Payment.Gateway.Service
             catch (Exception e)
             {
                 //log error
+                //logger.InsertLog(e.StackTrace, Log.Constants.ErrorSet.Errors.Error);
                 return new PaymentDetails { Message = "An error occured. Please try again later" };
             }
         }
@@ -68,6 +73,8 @@ namespace Payment.Gateway.Service
                 catch (Exception e)
                 {
                     //add log
+                    //logger.InsertLog(e.StackTrace, Log.Constants.ErrorSet.Errors.Error);
+
 
                 }
 
@@ -78,7 +85,7 @@ namespace Payment.Gateway.Service
 
         public bool UpdatePaymentHistory(PaymentResponse paymentResponse)
         {
-            LogDetails currentTransaction = new LogDetails
+            PaymentLogDetails currentTransaction = new PaymentLogDetails
             {
                 Amount = paymentResponse.Amount,
                 CreatedDate = DateTime.Now,
@@ -91,6 +98,21 @@ namespace Payment.Gateway.Service
             return paymentRepository.SaveTransactionDetails(currentTransaction);
 
         }
+
+
+        public Card CheckCard(PaymentTransactionDetails paymentTransactionDetails) 
+        {
+            var card = new Card
+            {
+                CardNum = paymentTransactionDetails.PayerCardNum,
+                CCV = paymentTransactionDetails.CCV,
+                ExpiryDate = paymentTransactionDetails.ExpiryDate
+            };
+
+            return card.ValidateCard(card);
+
+        }
+
 
 
     }

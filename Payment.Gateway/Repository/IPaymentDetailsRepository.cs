@@ -8,6 +8,6 @@ namespace Payment.Gateway.Repository
     {
         PaymentDetails GetTransactionDetails(Guid merchantId);
 
-        bool SaveTransactionDetails(LogDetails transactionDetails);
+        bool SaveTransactionDetails(PaymentLogDetails transactionDetails);
     }
 }

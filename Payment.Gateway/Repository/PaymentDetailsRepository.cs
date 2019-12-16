@@ -8,13 +8,13 @@ namespace Payment.Gateway.Repository
 {
     public class PaymentDetailsRepository : IPaymentDetailsRepository
     {
-        private List<LogDetails> logEntries;
+        private List<PaymentLogDetails> logEntries;
 
         public PaymentDetailsRepository()
         {
-            logEntries = new List<LogDetails>()
+            logEntries = new List<PaymentLogDetails>()
             {
-                new LogDetails()
+                new PaymentLogDetails()
                 {
                     Amount=19.0,
                     CreatedDate=DateTime.Now.AddDays(-10),
@@ -23,7 +23,7 @@ namespace Payment.Gateway.Repository
                     PayerCardNum = "4550123412342345",
                     Status=false
                 } ,
-                new LogDetails()
+                new PaymentLogDetails()
                 {
                     Amount=19.0,
                     CreatedDate=DateTime.Now.AddDays(-10),
@@ -32,7 +32,7 @@ namespace Payment.Gateway.Repository
                     PayerCardNum = "4550123542342345",
                     Status=true
                 },
-                 new LogDetails()
+                 new PaymentLogDetails()
                 {
                     Amount=15.0,
                     CreatedDate=DateTime.Now.AddDays(-5),
@@ -41,7 +41,7 @@ namespace Payment.Gateway.Repository
                     PayerCardNum = "4550123812002345",
                     Status=true
                 },
-                 new LogDetails()
+                 new PaymentLogDetails()
                 {
                     Amount=150.0,
                     CreatedDate=DateTime.Now.AddDays(-8),
@@ -58,7 +58,7 @@ namespace Payment.Gateway.Repository
         {
             var paymentDetails = new PaymentDetails();
             var list = logEntries.Where(i => i.MerchantId == merchantId).ToList();
-            paymentDetails.Payments = new List<LogDetails>();
+            paymentDetails.Payments = new List<PaymentLogDetails>();
 
             if (list.Any())
             {
@@ -83,7 +83,7 @@ namespace Payment.Gateway.Repository
             return paymentDetails;
         }
 
-        public bool SaveTransactionDetails(LogDetails transactionDetails)
+        public bool SaveTransactionDetails(PaymentLogDetails transactionDetails)
         {
             try
             {
