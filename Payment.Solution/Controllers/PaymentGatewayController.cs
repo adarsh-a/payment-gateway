@@ -30,10 +30,12 @@ namespace Payment.Solution.Controllers
         }
         //Get api/makepayment
         [HttpPost]
-       // [Route("makepayment")]
+        // [Route("makepayment")]
         [Produces("application/json")]
-        public string Post([FromBody] PaymentTransactionDetails paymentTransactionDetails)
+        public ResponseBase Post([FromBody] PaymentTransactionDetails paymentTransactionDetails)
         {
+            ResponseBase response = new ResponseBase();
+
             Serilog.Log.Information("Method Process Payment Started");
             //logger.InsertLog("Testing", Log.Constants.ErrorSet.Errors.Info);    
             var msg = string.Empty;
@@ -42,7 +44,6 @@ namespace Payment.Solution.Controllers
                 var card = paymentService.CheckCard(paymentTransactionDetails);
                 if (card.IsValid)
                 {
-
                     if (paymentTransactionDetails.MerchantId != Guid.Empty)
                     {
                         var currentMerchant = merchantsList.MerchantsInfoList.FirstOrDefault(i => i.Uid.Equals(paymentTransactionDetails.MerchantId));
@@ -55,32 +56,32 @@ namespace Payment.Solution.Controllers
                                 var transactionResponse = paymentService.ProcessTransaction(paymentTransactionDetails, merchantCard);
                                 if (transactionResponse != null && transactionResponse.Identifier != Guid.Empty)
                                 {
-                                    if (transactionResponse.Status == false)
-                                    {
-                                        msg = $"An error occured while processing the transaction. Please try again later";
+                                    var updateHistoryResponse = paymentService.UpdatePaymentHistory(transactionResponse);
 
+                                    if (transactionResponse.Status)
+                                    {
+                                        response.Success = true;
+                                        return response;
                                     }
 
-                                    var updateHistoryResponse = paymentService.UpdatePaymentHistory(transactionResponse);
+                                    response.Error = $"An error occured while processing the transaction. Please try again later";
+
                                 }
                                 else
                                 {
-                                    msg = $"An error occured while processing the transaction. Please try again later";
+                                    response.Error = $"An error occured while processing the transaction. Please try again later";
                                 }
-
                             }
                         }
                         else
                         {
-                            msg = $"Merchant with ID {paymentTransactionDetails.MerchantId.ToString()} cannot be found";
-
+                            response.Error = $"Merchant with ID {paymentTransactionDetails.MerchantId.ToString()} cannot be found";
                         }
                     }
                 }
-                else 
+                else
                 {
-                    msg = "Card is not valid";
-                
+                    response.Error = "Card is not valid";
                 }
             }
             else
@@ -88,7 +89,7 @@ namespace Payment.Solution.Controllers
                 msg = "Merchants list not available";
             }
 
-            return msg;
+            return response;
         }
 
 

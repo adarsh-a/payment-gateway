@@ -28,8 +28,7 @@ namespace Payment.Gateway.Service
             }
             catch (Exception e)
             {
-                //log error
-                //logger.InsertLog(e.StackTrace, Log.Constants.ErrorSet.Errors.Error);
+                Serilog.Log.Error($"Error {e.Message} at {e.StackTrace} ");
                 return new PaymentDetails { Message = "An error occured. Please try again later" };
             }
         }
@@ -72,10 +71,7 @@ namespace Payment.Gateway.Service
                 }
                 catch (Exception e)
                 {
-                    //add log
-                    //logger.InsertLog(e.StackTrace, Log.Constants.ErrorSet.Errors.Error);
-
-
+                    Serilog.Log.Error($"Error {e.Message} at {e.StackTrace} ");                    
                 }
 
             }
@@ -100,7 +96,7 @@ namespace Payment.Gateway.Service
         }
 
 
-        public Card CheckCard(PaymentTransactionDetails paymentTransactionDetails) 
+        public Card CheckCard(PaymentTransactionDetails paymentTransactionDetails)
         {
             var card = new Card
             {
@@ -112,8 +108,5 @@ namespace Payment.Gateway.Service
             return card.ValidateCard(card);
 
         }
-
-
-
     }
 }
