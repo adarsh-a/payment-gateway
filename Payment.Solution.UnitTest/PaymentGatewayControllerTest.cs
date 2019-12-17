@@ -40,7 +40,6 @@ namespace Payment.Solution.UnitTest
             };
 
             mock.Setup(i => i.ProcessTransaction(ptd, merchantCard)).Returns(pr);
-            mock.Setup(i => i.UpdatePaymentHistory(pr)).Returns(true);
 
             MerchantsList ml = new MerchantsList
             {
@@ -58,7 +57,6 @@ namespace Payment.Solution.UnitTest
             //paymentGatewayController.MakePayment(ptd);
 
             mock.Verify(f => f.ProcessTransaction(ptd, merchantCard));
-            mock.Verify(f => f.UpdatePaymentHistory(pr));
             Assert.AreEqual(pr, mock.Object.ProcessTransaction(ptd, merchantCard));
         }
 
