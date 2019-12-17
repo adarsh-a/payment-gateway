@@ -23,9 +23,7 @@ The payment gateway has access to the following informations:
 Headers:
  Content-type : application/json
 
-
- 
- Merchant Identifier is passed in the body.
+ Merchant Identifier is passed as URI parameter.
 ````
 
 2. Process a transaction
@@ -51,3 +49,4 @@ Body:
 3. Use Serilog to write logs to ElasticSearchSink
 4. Use Kibana to query the logs
 5. Write unit test for card validation
+6. Make endpoints restful
