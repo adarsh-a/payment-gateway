@@ -11,21 +11,18 @@ The payment gateway has access to the following informations:
 ## Improvements
  - Make use of private shared key for authentication between Bank and Payment Gateway
  - Use encryption for sensitive data
- - Add logging for all errors found when performing any action
  - Store data in MongoDB
  - Use async calls for API
- - Add validations for card number
  - Use Provider pattern for different banks
 
 
 ## API Testing
 1. Get Transactions for a specific merchant.
 ````
-/api/paymentgateway/gettransactiondetails
+/api/paymentgateway/{merchantId}
 Headers:
  Content-type : application/json
-Body: 
- "a731bea3-d82f-4cdb-8405-c91e4a4603f4"
+
 
  
  Merchant Identifier is passed in the body.
@@ -33,7 +30,7 @@ Body:
 
 2. Process a transaction
 ````
-/api/paymentgateway/makepayment
+/api/paymentgateway
 Headers:
  Content-type : application/json
 Body: 
@@ -46,3 +43,11 @@ Body:
 	}
 
 ````
+
+## Update
+
+1. Add swagger for API docs
+2. Create a domain for card logic
+3. Use Serilog to write logs to ElasticSearchSink
+4. Use Kibana to query the logs
+5. Write unit test for card validation
